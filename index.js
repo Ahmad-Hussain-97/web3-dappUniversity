@@ -4,7 +4,7 @@ const web3 = new Web3(rpcURL);
 var Tx = require("ethereumjs-tx");
 
 //Task 1: Connect and check account balance
-function checkAccountBalance() {
+function checkBalanceofAccount() {
   const account_address = "0x687422eEA2cB73B5d3e242bA5456b782919AFc85";
   web3.eth.getBalance(account_address, (err, wei) => {
     if (err) {
@@ -17,7 +17,7 @@ function checkAccountBalance() {
 }
 
 //Task 2: Accessing smart contracts
-function callViewState() {
+function accessContracts() {
   const contract_abi = [
     {
       inputs: [
@@ -132,7 +132,7 @@ function transferEther() {
 }
 
 //Task 4: Deploying Smart Contracts with Web3.js
-function deployContract() {
+function deploySmartContract() {
   const owner_account = "0x657ABc323D94452ca8c79F8c36AC69440681ab89";
   const owner_key = Buffer.from(
     "ae303023d55fdd322309d6db4526a7a0e79c8dffd2221858dff46b1b22d6572d",
@@ -169,7 +169,7 @@ function deployContract() {
 }
 
 //Task 5: Calling Smart Contract Functions with Web3.js
-function callSetState() {
+function callingContractFunctions() {
   const account1 = "0x657ABc323D94452ca8c79F8c36AC69440681ab89";
   const account2 = "0xcE495ab03995785d1C891dad48e3112cCC2C039a";
   const privateKey1 = Buffer.from(
@@ -349,3 +349,278 @@ function callSetState() {
     console.log("Account 2 balance:", balance);
   });
 }
+
+//Task 6: Smart Contract Events with Web3.js
+function listAllEvents() {
+  const abi = [
+    {
+      constant: true,
+      inputs: [],
+      name: "mintingFinished",
+      outputs: [{ name: "", type: "bool" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [],
+      name: "name",
+      outputs: [{ name: "", type: "string" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [
+        { name: "_spender", type: "address" },
+        { name: "_value", type: "uint256" },
+      ],
+      name: "approve",
+      outputs: [],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [],
+      name: "totalSupply",
+      outputs: [{ name: "", type: "uint256" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [
+        { name: "_from", type: "address" },
+        { name: "_to", type: "address" },
+        { name: "_value", type: "uint256" },
+      ],
+      name: "transferFrom",
+      outputs: [],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [],
+      name: "decimals",
+      outputs: [{ name: "", type: "uint256" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [],
+      name: "unpause",
+      outputs: [{ name: "", type: "bool" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [
+        { name: "_to", type: "address" },
+        { name: "_amount", type: "uint256" },
+      ],
+      name: "mint",
+      outputs: [{ name: "", type: "bool" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [],
+      name: "paused",
+      outputs: [{ name: "", type: "bool" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [{ name: "_owner", type: "address" }],
+      name: "balanceOf",
+      outputs: [{ name: "balance", type: "uint256" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [],
+      name: "finishMinting",
+      outputs: [{ name: "", type: "bool" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [],
+      name: "pause",
+      outputs: [{ name: "", type: "bool" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [],
+      name: "owner",
+      outputs: [{ name: "", type: "address" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [],
+      name: "symbol",
+      outputs: [{ name: "", type: "string" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [
+        { name: "_to", type: "address" },
+        { name: "_value", type: "uint256" },
+      ],
+      name: "transfer",
+      outputs: [],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [
+        { name: "_to", type: "address" },
+        { name: "_amount", type: "uint256" },
+        { name: "_releaseTime", type: "uint256" },
+      ],
+      name: "mintTimelocked",
+      outputs: [{ name: "", type: "address" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [
+        { name: "_owner", type: "address" },
+        { name: "_spender", type: "address" },
+      ],
+      name: "allowance",
+      outputs: [{ name: "remaining", type: "uint256" }],
+      payable: false,
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [{ name: "newOwner", type: "address" }],
+      name: "transferOwnership",
+      outputs: [],
+      payable: false,
+      type: "function",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, name: "to", type: "address" },
+        { indexed: false, name: "value", type: "uint256" },
+      ],
+      name: "Mint",
+      type: "event",
+    },
+    { anonymous: false, inputs: [], name: "MintFinished", type: "event" },
+    { anonymous: false, inputs: [], name: "Pause", type: "event" },
+    { anonymous: false, inputs: [], name: "Unpause", type: "event" },
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, name: "owner", type: "address" },
+        { indexed: true, name: "spender", type: "address" },
+        { indexed: false, name: "value", type: "uint256" },
+      ],
+      name: "Approval",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, name: "from", type: "address" },
+        { indexed: true, name: "to", type: "address" },
+        { indexed: false, name: "value", type: "uint256" },
+      ],
+      name: "Transfer",
+      type: "event",
+    },
+  ];
+  const address = "0xff84a3af17ffa5f5bd14e1abdb5c70f1a798f7fd";
+  const contract = new web3.eth.Contract(abi, address);
+
+  contract.getPastEvents(
+    "AllEvents",
+    {
+      fromBlock: 0,
+      toBlock: "latest",
+    },
+    (err, events) => {
+      if (err) {
+        console.log(">>>>>Error:", err);
+        return;
+      }
+      console.log("<<<<<Events:", events);
+    }
+  );
+}
+
+//Task 7: Inspecting Blocks with Web3.js
+
+function InspectTheBlocks() {
+  web3.eth.getBlockNumber().then((data) => {
+    console.log("Latest block number is:", data);
+  });
+
+  web3.eth.getBlock("latest").then((data) => {
+    console.log("Latest block data is:", data);
+  });
+
+  web3.eth.getBlockNumber().then((latest) => {
+    for (let i = 0; i < 10; i++) {
+      web3.eth.getBlock(latest - i).then((data) => {
+        console.log("Data @Block#" + (latest - i) + ":");
+        console.log(data);
+      });
+    }
+  });
+}
+
+//Task 8: Web3.js Utilities
+function web3Utilities() {
+  web3.eth.getGasPrice().then((result) => {
+    console.log("Price of Gas:", web3.utils.fromWei(result, "ether"), "ethers");
+  });
+
+  console.log(
+    "SHA3 encoding of string 'Dapp University':",
+    web3.utils.sha3("Dapp University")
+  );
+
+  console.log(
+    "Keccak256 hash of string 'Dapp University':",
+    web3.utils.keccak256("Dapp University")
+  );
+
+  console.log("Randomly generated 32-bit hex:", web3.utils.randomHex(32));
+
+  const _ = web3.utils._;
+  _.each({ key1: "value1", key2: "value2" }, (value, key) => {
+    console.log("Underscore utility key:", key, "value:", value);
+  });
+}
+
+/*Test all tasks (call the functions)
+1: checkBalanceofAccount()
+2: accessContracts()
+3: transferEther()
+4: deploySmartContracts()
+5: callingContractFunctions()
+6: listAllEvents()
+7: InspectTheBlocks()
+8: web3Utilities()
+ */
