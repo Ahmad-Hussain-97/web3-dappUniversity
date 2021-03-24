@@ -168,4 +168,184 @@ function deployContract() {
   });
 }
 
-//Task 5:
+//Task 5: Calling Smart Contract Functions with Web3.js
+function callSetState() {
+  const account1 = "0x657ABc323D94452ca8c79F8c36AC69440681ab89";
+  const account2 = "0xcE495ab03995785d1C891dad48e3112cCC2C039a";
+  const privateKey1 = Buffer.from(
+    "ae303023d55fdd322309d6db4526a7a0e79c8dffd2221858dff46b1b22d6572d",
+    "hex"
+  );
+  const privateKey2 = Buffer.from(
+    "f5cb0268cd208e3b7669bd1927307ea49f9f85958ca7edb182234cecd12921a6",
+    "hex"
+  );
+
+  const contractAddress = "0xff84a3af17ffa5f5bd14e1abdb5c70f1a798f7fd";
+  const contractABI = [
+    {
+      constant: true,
+      inputs: [],
+      name: "name",
+      outputs: [{ name: "", type: "string" }],
+      payable: false,
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [
+        { name: "_spender", type: "address" },
+        { name: "_value", type: "uint256" },
+      ],
+      name: "approve",
+      outputs: [{ name: "success", type: "bool" }],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [],
+      name: "totalSupply",
+      outputs: [{ name: "", type: "uint256" }],
+      payable: false,
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [
+        { name: "_from", type: "address" },
+        { name: "_to", type: "address" },
+        { name: "_value", type: "uint256" },
+      ],
+      name: "transferFrom",
+      outputs: [{ name: "success", type: "bool" }],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [],
+      name: "standard",
+      outputs: [{ name: "", type: "string" }],
+      payable: false,
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [{ name: "", type: "address" }],
+      name: "balanceOf",
+      outputs: [{ name: "", type: "uint256" }],
+      payable: false,
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [],
+      name: "symbol",
+      outputs: [{ name: "", type: "string" }],
+      payable: false,
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      constant: false,
+      inputs: [
+        { name: "_to", type: "address" },
+        { name: "_value", type: "uint256" },
+      ],
+      name: "transfer",
+      outputs: [{ name: "success", type: "bool" }],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "function",
+    },
+    {
+      constant: true,
+      inputs: [
+        { name: "", type: "address" },
+        { name: "", type: "address" },
+      ],
+      name: "allowance",
+      outputs: [{ name: "", type: "uint256" }],
+      payable: false,
+      stateMutability: "view",
+      type: "function",
+    },
+    {
+      inputs: [],
+      payable: false,
+      stateMutability: "nonpayable",
+      type: "constructor",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, name: "_from", type: "address" },
+        { indexed: true, name: "_to", type: "address" },
+        { indexed: false, name: "_value", type: "uint256" },
+      ],
+      name: "Transfer",
+      type: "event",
+    },
+    {
+      anonymous: false,
+      inputs: [
+        { indexed: true, name: "_owner", type: "address" },
+        { indexed: true, name: "_spender", type: "address" },
+        { indexed: false, name: "_value", type: "uint256" },
+      ],
+      name: "Approval",
+      type: "event",
+    },
+  ];
+  const contract = new web3.eth.Contract(contractABI, contractAddress);
+
+  web3.eth.getTransactionCount(account1, (err, txCount) => {
+    if (err) {
+      console.log(">>>>>Error:", err);
+      return;
+    }
+    const txObject = {
+      nonce: web3.utils.toHex(txCount),
+      gasLimit: web3.utils.toHex(800000),
+      gasPrice: web3.utils.toHex(web3.utils.toWei("10", "gwei")),
+      to: contractAddress,
+      data: contract.methods.transfer(account2, 1000).encodeABI(),
+    };
+    const tx = new Tx.Transaction(txObject, { chain: "ropsten" });
+    tx.sign(privateKey1);
+
+    const serializedTx = tx.serialize();
+    const raw = "0x" + serializedTx.toString("hex");
+
+    web3.eth.sendSignedTransaction(raw, (err, txHash) => {
+      if (err) {
+        console.log(">>>>>Error:", err);
+        return;
+      }
+      console.log("Tokens transferred successfully, Hash:", txHash);
+    });
+  });
+
+  contract.methods.balanceOf(account1).call((err, balance) => {
+    if (err) {
+      console.log(">>>>>Error:", err);
+      return;
+    }
+    console.log("Account 1 Balance:", balance);
+  });
+
+  contract.methods.balanceOf(account2).call((err, balance) => {
+    if (err) {
+      console.log(">>>>>Error:", err);
+      return;
+    }
+    console.log("Account 2 balance:", balance);
+  });
+}
